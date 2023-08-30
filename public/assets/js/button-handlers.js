@@ -36,6 +36,11 @@ signin.addEventListener('click', function (event) {
   console.log(document.getElementById('floatingPassword').value);
   postData().then((data) => {
     console.log(data); // JSON data parsed by `data.json()` call
-    console.log(data.data.access_token); // JSON data parsed by `data.json()` call
+    if (data.data.access_token) {
+      localStorage.setItem(
+        'bundle-email-v001-access-token',
+        data.data.access_token
+      );
+    }
   });
 });
