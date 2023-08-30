@@ -1,5 +1,5 @@
 const srvrURL = `http://email.api.bundle-insurance.com/controller/sessions.php`;
-
+console.log(document.cookie);
 const signin = document.getElementById('signin');
 const floatingInput = document.getElementById('floatingInput');
 const floatingPassword = document.getElementById('floatingPassword');
@@ -32,15 +32,9 @@ async function postData(
 
 signin.addEventListener('click', function (event) {
   event.preventDefault();
-  console.log(document.getElementById('floatingInput').value);
-  console.log(document.getElementById('floatingPassword').value);
   postData().then((data) => {
-    console.log(data); // JSON data parsed by `data.json()` call
     if (data.data.access_token) {
-      localStorage.setItem(
-        'bundle-email-v001-access-token',
-        data.data.access_token
-      );
+      document.cookie = `_token=${data.data.access_token}`;
     }
   });
 });
