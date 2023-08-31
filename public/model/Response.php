@@ -30,6 +30,10 @@
         }
 
         public function send() {
+            header('Access-Control-Allow-Origin: http://192.168.54.22');
+            header('Access-Control-Allow-Headers: Content-Type, x-requested-with');
+            header('Access-Control-Allow-Methods: POST, PATCH, GET, OPTIONS, DELETE');
+            header('Access-Control-Max-Age: 86400');
             header('Content-type: application/json;charset=utf-8');
 
             if ($this->_toCache == true) {

@@ -1,0 +1,26 @@
+# CORS options
+#Header Set Access-Control-Allow-Origin "*"
+
+# php_flag display_errors on
+# SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0
+# On IONOS this turns into REDIRECT_HTTP_AUTHORIZATION, some of the combinations below also worked
+# SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+# RewriteCond %{HTTP:Authorization} ^(.*)
+# RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+
+#RewriteEngine on
+#RewriteBase /v001/
+#RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteCond %{REQUEST_FILENAME} !-f
+
+#RewriteRule ^v001/tasks/([0-9]+)$ controller/task.php?taskid=$1 [L]
+#RewriteRule ^v001/tasks/complete$ controller/task.php?completed=Y [L]
+#RewriteRule ^v001/tasks/incomplete$ controller/task.php?completed=N [L]
+#RewriteRule ^v001/tasks/page/([0-9]+)$ controller/task.php?page=$1 [L]
+#RewriteRule ^v001/tasks$ controller/task.php [L]
+
+#RewriteRule ^v001/users$ controller/users.php [L]
+
+#RewriteRule ^v001/sessions/([0-9]+)$ controller/sessions.php?sessionid=$1 [L]
+#RewriteRule ^v001/sessions$ controller/sessions.php [L]
+
