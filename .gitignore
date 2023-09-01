@@ -6,6 +6,6 @@
 # production
 /not working
 /archive
-/controller/db.php
-/controller/sessions.php
+/public/controller/db.php
+/public/controller/sessions.php
 *no authentication.php

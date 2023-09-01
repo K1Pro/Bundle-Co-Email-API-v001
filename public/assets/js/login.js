@@ -5,17 +5,71 @@ const getCookie = (name) =>
   document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`))?.at(2);
 
 const srvrURL = `http://email.api.bundle-insurance.com/controller/sessions.php`;
+const emailURL = `http://email.api.bundle-insurance.com/controller/email.php`;
 let usernamePrompt, passwordPrompt;
 
-// Example POST method implementation:
-async function postData(
+function loginPrompt() {
+  while (!usernamePrompt) {
+    usernamePrompt = prompt('Please enter username', '');
+  }
+
+  while (!passwordPrompt) {
+    passwordPrompt = prompt('Please enter password', '');
+  }
+}
+
+function loadHTML() {
+  document.getElementById('app').innerHTML = 'Logged In Finally!!!!';
+}
+
+function validationCookie() {
+  if (
+    getCookie('_access_token') == undefined ||
+    getCookie('_access_token') == '' ||
+    getCookie('_access_token') == null
+  ) {
+    loginPrompt();
+
+    if (usernamePrompt && passwordPrompt) {
+      postUserData(srvrURL, usernamePrompt, passwordPrompt).then((data) => {
+        console.log(data);
+        if (data?.data?.access_token) {
+          document.cookie = `_access_token=${data.data.access_token}`;
+          postEmailData(emailURL, data.data.access_token).then((data) => {
+            if (data) {
+              console.log(data);
+              loadHTML();
+            }
+          });
+        } else {
+          usernamePrompt = '';
+          passwordPrompt = '';
+          validationCookie();
+        }
+      });
+    }
+  } else {
+    postEmailData(emailURL, getCookie('_access_token')).then((data) => {
+      if (data) {
+        console.log(data);
+        if (data?.statusCode === 200 || data?.statusCode === 201) {
+          loadHTML();
+        } else {
+          document.cookie = '_access_token=';
+          validationCookie();
+        }
+      }
+    });
+  }
+}
+
+async function postUserData(
   url = srvrURL,
   username,
   password,
   // data = {},
   errorMsg = 'Something went wrong'
 ) {
-  console.log(url);
   // Default options are marked with *
   const response = await fetch(url, {
     method: 'POST', // *GET, POST, PUT, DELETE, etc.
@@ -36,42 +90,26 @@ async function postData(
   return response.json(); // parses JSON response into native JavaScript objects
 }
 
-postData(srvrURL, 'Bartosz', '7257Touhy!').then((data) => {
-  console.log(data);
-  if (data.data.access_token) {
-    document.cookie = `_access_token=${data.data.access_token}`;
-    console.log(getCookie('_access_token'));
-  }
-});
+async function postEmailData(url = emailURL, accessToken) {
+  console.log(accessToken);
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: accessToken,
+    },
+  });
+  return response.json();
+}
 
-// while (
-//   getCookie('_access_token') == undefined ||
-//   getCookie('_access_token') == ''
-// ) {
-//   console.log('no access');
-//   if (!usernamePrompt) {
-//     usernamePrompt = prompt('Please enter username', '');
-//     console.log(usernamePrompt);
+validationCookie();
+
+// postUserData(srvrURL, 'Bartosz', '7257Touhy!').then((data) => {
+//   console.log(data);
+//   if (data.data.access_token) {
+//     document.cookie = `_access_token=${data.data.access_token}`;
+//     console.log(getCookie('_access_token'));
 //   }
+// });
 
-//   if (usernamePrompt) {
-//     if (!passwordPrompt) {
-//       passwordPrompt = prompt('Please enter password', '');
-//       console.log(passwordPrompt);
-//     }
-
-//     if (passwordPrompt) {
-//       postData(srvrURL, usernamePrompt, passwordPrompt).then((data) => {
-//         if (data.data.access_token) {
-//           document.cookie = `_access_token=${data.data.access_token}`;
-//         }
-//       });
-//     } else {
-//       alert('Password cannot be blank');
-//     }
-//   } else {
-//     alert('Name cannot be blank');
-//   }
-// }
 //   let loggedInUser = localStorage.getItem('BundleContactList-LoginName');
-//   console.log(`${loggedInUser} is logged in`);
+// console.log(localStorage.getItem('_access_token'));
