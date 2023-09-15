@@ -4,8 +4,8 @@
 const getCookie = (name) =>
   document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`))?.at(2);
 
-const srvrURL = `http://email.api.bundle-insurance.com/controller/sessions.php`;
-const emailURL = `http://email.api.bundle-insurance.com/controller/email.php`;
+const srvrURL = `https://api-email.k1pro.net/controller/sessions.php`;
+const emailURL = `https://api-email.k1pro.net/controller/email.php`;
 let usernamePrompt, passwordPrompt;
 
 function loginPrompt() {
